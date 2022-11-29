@@ -88,6 +88,14 @@
   </main>
 
   <script>
+
+    class InvalidInput extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "Invalid Input";
+      }
+    }
+    
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +103,118 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      //try and catch
+      
+      if (isNaN(firstNum)){ 
+        throw new InvalidInput("First input is invalid"); 
+      }
+      if (isNaN(secondNum)){ 
+        throw new InvalidInput("Second input is invalid"); 
+      }
+
+      try {
+        if(isNaN(firstNum) || isNaN(secondNum)){
+          throw new SyntaxError;
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (e) {
+        throw new Error("Error in evaluation.");
+      } finally {
+        if(isNaN(firstNum) || isNaN(secondNum)){
+          output.innerHTML = 'Invalid input';
+        }
+      }
     });
+
+    //The Global Error handler and 3rd Party Tracking
+    window.onerror = function (msg, url, line) {
+      TrackJS.track(`${msg} ${url} ${line}`);
+      return false;
+    }
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    let buttonList = document.querySelectorAll("button"); 
+
+    //Console Log
+    buttonList[1].addEventListener('click', ()=> {
+      console.log("Console Log Demo");
+    })
+    //Console Error
+    buttonList[2].addEventListener('click', ()=> {
+      console.error("Console Error Demo");
+    })
+    //Console Count
+    buttonList[3].addEventListener('click', ()=> {
+      console.count("Count Button");
+    })
+    //Console Warn
+    buttonList[4].addEventListener('click', ()=> {
+      console.warn("Console Warn Demo");
+    })
+    //Console Asserts
+    buttonList[5].addEventListener('click', ()=> {
+      console.assert(false, {number: 2, errorMsg: "The number does not equal to 3"});
+    })
+    //Console Clear
+    buttonList[6].addEventListener('click', ()=> {
+      console.clear("Console Log Demo");
+    })
+    //Console Dir
+    buttonList[7].addEventListener('click', ()=> {
+      console.dir(buttonList[7]);
+    })
+    //Console Dirxml
+    buttonList[8].addEventListener('click', ()=> {
+      console.dirxml(buttonList[8]);
+    })
+    //Console Group 
+    buttonList[9].addEventListener('click', ()=> {
+      console.group();
+    })
+    //Console Group End
+    buttonList[10].addEventListener('click', ()=> {
+      console.groupEnd();
+    })
+    //Console Table
+    buttonList[11].addEventListener('click', ()=> {
+      console.table({'Software Enginneer': 110, 'Programming Language': 130, 'Advanced Software': 112});
+    })
+    //Console Time
+    buttonList[12].addEventListener('click', ()=> {
+      console.time();
+    })
+    //Console Time End
+    buttonList[13].addEventListener('click', ()=> {
+      console.timeEnd();
+    })
+    //Console Trace
+    buttonList[14].addEventListener('click', ()=> {
+      let handleBtnClick = ()=>{
+        deep();
+      }
+      let deep = ()=>{
+        deeper();
+      }
+      let deeper = ()=>{
+        deepest();
+      }
+      let deepest = ()=>{
+        console.trace();
+      }
+      handleBtnClick();bnh
+    })
+
+    //Console Global Error
+    buttonList[15].addEventListener('click', handleBtnClick); 
+    
+    function handleBtnClick(){
+      console.log('Sadly an error happened my friend');
+      boom();
+    }
   </script>
 </body>
 
